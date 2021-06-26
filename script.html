@@ -1,0 +1,574 @@
+<script>
+	$(document).ready(function() {
+    
+    $('.changeItem').change(function(){
+        $('#generate').click();
+    });
+
+    $(document).keypress(function (e) {
+        var key = e.which;
+         if(key == 13)  // the enter key code
+         {
+            $('#generate').click();
+             return false;  
+          }
+    });
+    
+    $('#video-button').hide();
+    $('#plot').hide();
+    
+    var letterOptions = ["x","y","z","a","b","c","d","f","g","h","j","k","m","n","p","q","r","v","w"];
+    
+    var testing = false;
+    $('#generate').click(function(){
+        if(!testing){$("#answer").hide(); $("#show-answer").val("Show Answer");}
+        
+        var letter = letterOptions[random(0,letterOptions.length-1)].toString();
+        $('#plot').hide();
+
+        var type;
+        // handles the formatting for selecting any type
+        if($("#type").val()=="any"){type = random(1,5);}
+        else{type = parseInt($("#type").val())}
+        
+        generate(type,letter);       
+     });
+
+
+    $("#show-answer").click(function(){
+       if($("#answer").is(":hidden") ){
+          $("#answer").show();
+          $("#show-answer").val("Hide Answer");
+       } else{
+         $("#answer").hide();
+         $("#show-answer").val("Show Answer");
+        }
+    });
+    
+    if(testing){ $("#answer").show();}
+    
+	});
+	function generate(type,letter){
+       
+       var videoLinks = ["https://www.youtube.com/watch?v=KYA2zaMFzyw",
+                         "https://www.youtube.com/watch?v=cY5l0UwVniI",
+                         "https://www.youtube.com/watch?v=xXkxOPK9Svs",
+                         "https://www.youtube.com/watch?v=mQIlC4YcmZo",
+                         "https://www.youtube.com/watch?v=ypeO1Xxy4cI"];
+       
+       if(videoLinks[type-1] != null && videoLinks[type-1].length > 0){ 
+         $("#videoLink").attr("href", videoLinks[type-1]);
+         $('#video-button').show();
+       }
+       else{
+         $('#video-button').hide();
+       }
+       
+       var problem = "";
+       var answer = "";
+       var a,b,c,d,e,f,g,h;
+       $("#generated").html("");
+       $("#answer").html("");
+       
+       switch(type) {
+           // Solving Proportions
+           case 1: 
+           a = random(2,15);
+           b = random(2,10)+a;
+           c = randomDec(2,8,1); // scale factor
+           d = formatDec(c*a); 
+           e = formatDec(c*b);
+           
+           switch(random(0,3)){
+           
+               // answer is a
+               case 0:
+               problem = "\\(\\cfrac{"+letter+"}{"+b+"}=\\cfrac{"+d+"}{"+e+"}\\)";
+               answer = "\\("+letter+" = "+a+"\\)";
+               break;
+               
+               // answer is b
+               case 1:
+               problem = "\\(\\cfrac{"+a+"}{"+letter+"}=\\cfrac{"+d+"}{"+e+"}\\)";
+               answer = "\\("+letter+" = "+b+"\\)";
+               break;
+               
+               // answer is d
+               case 2:
+               problem = "\\(\\cfrac{"+a+"}{"+b+"}=\\cfrac{"+letter+"}{"+e+"}\\)";
+               answer = "\\("+letter+" = "+d+"\\)";
+               break;
+               
+               // answer is e
+               case 3:
+               problem = "\\(\\cfrac{"+a+"}{"+b+"}=\\cfrac{"+d+"}{"+letter+"}\\)";
+               answer = "\\("+letter+" = "+e+"\\)";
+               break;
+           }
+           break;
+           
+           // Writing and Solving Proportions
+           case 2: 
+           
+           switch(random(0,1)){
+             
+             // word problems not involving money
+             case 0:
+             var opt = generatePropWord(generateRate(),false); // helper function
+             problem = opt.p1+" "+opt.p2;
+             answer = opt.a;   
+             break;
+             
+             // word problems involving money
+             case 1:
+             var opt = generatePropMoney(false); // helper function
+             problem = opt.p;
+             answer = opt.a;             
+             break;
+             
+           }
+           break;
+           
+           // Rate Tables
+           case 3: 
+           var rate = generateRate();
+           var xstringProb = "";
+           var xstringAns = ""; 
+           var ystringProb = "";
+           var ystringAns = ""; 
+           var xVal = random(0,3);
+           var scale;
+           
+           problem = "Complete the rate table";
+           var probTable = "<table border='1'><tr><td>"+capitalizeFLetter(rate.unit2_plural)+" \\((x)\\)</td>";
+           var ansTable =  "<table border='1'><tr><td>"+capitalizeFLetter(rate.unit2_plural)+" \\((x)\\)</td>";
+           
+           var xVals = [];
+           var yVals = [];
+           
+           // columns in the table
+           var size = 6;
+           
+           for(var i = 0; i < size; i++){
+                            
+              xVals.push(xVal);
+              yVals.push(Math.round((xVal*rate.unitRate)*100000)/100000);
+              
+              // format answer table
+              xstringAns += "<td>"+(xVal)+"</td>";
+              ystringAns += "<td>"+(Math.round((xVal*rate.unitRate)*100000)/100000)+"</td>";
+              
+              // change the scale each time so the table jumps around a bit
+              scale = random(1,5);
+              xVal = xVal+scale; 
+           
+           }
+                      
+           var randomIndexes = getMultRandom(0,size-1,size-2);
+           
+           // take out values of the arrays to use in the problem table
+           for(var j = 0; j < randomIndexes.length; j++){
+              
+              // either make a blank in the x or y coordinate for the index
+              switch(random(0,1)){
+                 
+                 case 0:  xVals[randomIndexes[j]]="";  break;
+                 
+                 case 1:  yVals[randomIndexes[j]]="";  break;
+              
+              }
+              
+              
+           }
+           
+           // format problem table
+           for(var i = 0; i < size; i++){
+                            
+              xstringProb += "<td>"+(xVals[i])+"</td>";
+              ystringProb += "<td>"+(yVals[i])+"</td>";
+
+           }
+           
+           probTable += xstringProb+"</tr><tr><td>"+capitalizeFLetter(rate.unit1)+" \\((y)\\)</td>"+ystringProb+"</tr></table>";
+           ansTable += xstringAns+"</tr><tr><td>"+capitalizeFLetter(rate.unit1)+" \\((y)\\)</td>"+ystringAns+"</tr></table>";
+           
+           problem += probTable;
+           answer = "Unit rate: "+rate.unitRate+" "+rate.unit1+" per "+rate.unit2_singular+"<BR>"+ansTable;
+           break;
+           
+           // Writing Equations
+           case 4: 
+           
+           switch(random(0,1)){
+             
+             // word problems not involving money
+             case 0:
+             var opt = generatePropWord(generateRate(),true); // helper function
+             problem = opt.p1+" "+opt.p2;
+             answer = opt.a;   
+             break;
+             
+             // word problems involving money
+             case 1:
+             var opt = generatePropMoney(true); // helper function
+             problem = opt.p;
+             answer = opt.a;             
+             break;
+             
+           }
+           break;
+           
+           // Proportional Graphs
+           case 5: 
+           var rate = generateRate();
+           
+           // draw(line, scatterXs, scatterYs,plot,xScale,yMax, xLabel, yLabel) 
+           var yScale = Math.floor(rate.unitRate);
+           var xVals = [];
+           var yVals = [];
+           var coords = [];
+           var yVal;
+           var labelXs = [];
+           var labelYs = [];
+           
+           // pick two random x values between 1 and 5 to have labels
+           var randomIndexes = getMultRandom(1,5,2);
+           
+           for(var i = 0; i < 11; i++){
+                
+                yVal = Math.round(i*rate.unitRate*10000)/10000; 
+                xVals.push(i);
+                yVals.push(yVal);
+                
+                // add labels for some of the coordinates
+                if(randomIndexes.indexOf(i) != -1){
+                    
+                    labelXs.push(i);
+                    labelYs.push(yVal);
+                    coords.push("("+i+","+yVal+")");
+                  
+                }
+                
+           }
+           
+           // this allows for variability in the graph other than just doing Math.floor(unitRate) as the yScale since that made every graph look identical
+           var yMax = random(Math.floor(rate.unitRate*5), Math.floor(rate.unitRate*10));
+           
+           draw(rate.unitRate+" x",xVals,yVals,"plot",1,yMax, capitalizeFLetter(rate.unit2_plural), capitalizeFLetter(rate.unit1),labelXs,labelYs,coords);
+           $('#plot').show();
+           var graph = false;
+           if(random(0,1) === 1){ graph = true; }
+           var opt = generatePropWord(rate,graph); // helper function
+           problem = opt.g+". "+opt.p2;
+           answer = opt.a;   
+
+           break;
+
+       }
+            
+       $("#generated").html(problem);
+       $("#answer").html(doublesigns(answer));
+       renderMathInElement(document.body);
+	}
+    
+    function getMultRandom(min,max,num){
+       
+       var arr = [];
+       while(arr.length < num){
+         var r = random(min,max);
+         if(arr.indexOf(r) === -1) arr.push(r);
+      }
+       
+       return arr;
+   }
+    
+    
+    function capitalizeFLetter(string) { 
+          return string[0].toUpperCase() +  string.slice(1); 
+        }
+    
+    // helper function for generatePropWord
+    function generateName(){
+       
+       var options = [
+                          {name:"John", pronoun:"he"},
+                          {name:"Jane", pronoun:"she"},
+                          {name:"Bill", pronoun:"he"},
+                          {name:"Alex", pronoun:"she"},
+                          {name:"Jennifer", pronoun:"she"},
+                          {name:"Skyler", pronoun:"she"},
+                          {name:"Michael", pronoun:"he"},
+                          {name:"Sarah", pronoun:"she"},
+                          {name:"Kim", pronoun:"she"},
+                          {name:"Jacob", pronoun:"he"},
+                          {name:"Jessica", pronoun:"she"},
+                          {name:"Antonio", pronoun:"he"},
+                          {name:"Anthony", pronoun:"he"},
+                          {name:"Rebecca", pronoun:"she"},
+                          {name:"Jen", pronoun:"she"},
+                          {name:"Jeff", pronoun:"he"}
+                      ];
+        
+        var chosen = options[random(0,options.length-1)];
+        return chosen;
+    }
+    
+    // helper function to generate a rate from a list of examples
+    function generateRate(){
+    
+       var z = generateName();
+    
+       var options = [
+                          {noun:"a car",unit1:"miles", unit2_singular:"gallon of gas", unit2_plural:"gallons of gas", unitRate:random(20,50,1),num:random(3,30),prep:"on",pronoun:"the car", verb:"drive", ques:"far"},
+                          {noun:"an airplane",unit1:"miles", unit2_singular:"hour", unit2_plural:"hours", unitRate:random(400,600,10),num:random(3,30),prep:"in",pronoun:"the plane", verb:"travel", ques:"far"},
+                          {noun:z.name,unit1:"dollars", unit2_singular:"hour", unit2_plural:"hours", unitRate:randomDec(7,15,1),num:random(3,30),prep:"in",pronoun:z.pronoun, verb:"earn", ques:"much"},
+                          {noun:z.name,unit1:"pages", unit2_singular:"hour", unit2_plural:"hours", unitRate:random(8,15,1),num:random(3,30),prep:"in",pronoun:z.pronoun, verb:"write", ques:"much"},
+                          {noun:z.name,unit1:"chairs", unit2_singular:"week", unit2_plural:"weeks", unitRate:random(2,5,1),num:random(3,15),prep:"in",pronoun:z.pronoun, verb:"build", ques:"many"},
+                          {noun:z.name,unit1:"vases", unit2_singular:"week", unit2_plural:"weeks", unitRate:random(10,30,1),num:random(3,15),prep:"in",pronoun:z.pronoun, verb:"paint", ques:"many"}
+                          
+                      ];
+        
+        return options[random(0,options.length-1)]; 
+    
+    }
+    
+    // helper function to generate word problems for proportions
+    function generatePropWord(chosen,equation){
+         
+        var prob1 = "";
+        var graphStarter = "Suppose "+chosen.noun+" can "+chosen.verb+" "+chosen.unit1+" as shown in the graph";
+        if(chosen.unit1 == "dollars"){
+           prob1 = "Suppose "+chosen.noun+" can "+chosen.verb+" $\\("+formatDec(chosen.unitRate*chosen.num).toFixed(2)+"\\)  "+chosen.prep+" \\("+chosen.num+"\\) "+chosen.unit2_plural+".";
+        }
+        else{
+           prob1 = "Suppose "+chosen.noun+" can "+chosen.verb+" \\("+formatDec(chosen.unitRate*chosen.num)+"\\) "+chosen.unit1+" "+chosen.prep+" \\("+chosen.num+"\\) "+chosen.unit2_plural+".";    
+        }
+        var ans = "";
+        
+        var prob2 = "";
+        
+        if(equation){
+
+          prob2 += " What equation relates the "+chosen.unit1+", \\("+chosen.unit1.charAt(0)+"\\), to the number of "+chosen.unit2_plural+", \\("+chosen.unit2_plural.charAt(0)+"\\)?";
+          ans = "\\("+chosen.unit1.charAt(0)+" = "+chosen.unitRate+chosen.unit2_plural.charAt(0)+"\\)"; 
+
+        } else{
+        
+          // generate format of problem
+          switch(random(0,2)){
+                
+                // unit rate
+                case 0:
+                prob2 += " How "+chosen.ques+" can "+chosen.pronoun+" "+chosen.verb+" "+chosen.prep+" \\( 1 \\) "+chosen.unit2_singular+"?";
+                if(chosen.unit1 == "dollars"){
+                   ans = "$\\("+chosen.unitRate.toFixed(2)+"\\)"; 
+                }
+                else{
+                   ans = "\\("+chosen.unitRate+"\\) "+chosen.unit1; 
+                } 
+                break;
+                
+                // scaling up
+                case 1:
+                var newNum = random(1,5)+chosen.num;  // num of new units
+                var newAmount = formatDec(newNum*chosen.unitRate); // new amount
+                prob2 += " How "+chosen.ques+" can "+chosen.pronoun+" "+chosen.verb+" "+chosen.prep+" \\( "+newNum+" \\) "+chosen.unit2_plural+"?";
+                if(chosen.unit1 == "dollars"){
+                   ans = "$\\("+newAmount.toFixed(2)+"\\)"; 
+                }
+                else{
+                   ans = "\\("+newAmount+"\\) "+chosen.unit1; 
+                }
+                break;
+                
+                // given new amount, determine number of units
+                case 2:
+                var newNum = random(1,5)+chosen.num;  // num of new units
+                var newAmount = formatDec(newNum*chosen.unitRate); // new amount
+                if(chosen.unit1 == "dollars"){
+                  prob2 += " How many "+chosen.unit2_plural+" are needed to "+chosen.verb+" $\\("+newAmount.toFixed(2)+"\\)?";
+                }
+                else{
+                  prob2 += " How many "+chosen.unit2_plural+" are needed to "+chosen.verb+" \\("+newAmount+"\\) "+chosen.unit1+"?";
+                }
+                ans = "\\("+newNum+"\\) "+chosen.unit2_plural; 
+                break;
+            }
+        }
+       
+       return {p1:prob1,p2:prob2, a:ans, g:graphStarter};
+    }
+    
+    // helper function to generate word problems for proportions
+    function generatePropMoney(equation){
+       
+        var options = [
+                          {singular:"pound of ham", plural:"pounds of ham",price:randomDec(1.5, 5.5, 2),number:random(2,5)},
+                          {singular:"cantaloupe", plural:"cantaloupes",price:randomDec(1,3,2),number:random(2,10)},
+                          {singular:"package of blueberries", plural:"packages of blueberries",price:randomDec(3,4.5,2),number:random(2,8)},
+                          {singular:"kiwi fruit", plural:"kiwi fruits",price:randomDec(0.25,1.5,2),number:random(2,10)},
+                          {singular:"orange", plural:"oranges",price:randomDec(0.35,1,2),number:random(2,10)},
+                          {singular:"slice of pizza", plural:"slices of pizza",price:randomDec(1,2.99,2),number:random(2,10)},
+                          {singular:"soda", plural:"sodas",price:randomDec(0.75,1.25,2),number:random(2,10)},
+                          {singular:"video game", plural:"video games",price:randomDec(25,60,2),number:random(2,6)}
+                      ];
+        
+        var chosen = options[random(0,options.length-1)];
+        var single = chosen.singular;
+        var plural = chosen.plural;
+        var price = chosen.price;
+        var num = chosen.number;            
+        var cost = formatDec(price*num);  
+        var prob = "Suppose \\("+num+"\\) "+plural+" cost $\\("+cost.toFixed(2)+"\\).";
+        var ans = "";
+        
+        if(equation){
+          
+          prob += " What equation relates the total cost, \\(C\\), to the number of "+plural+", \\(n\\)?";
+          ans = "\\(C = "+price.toFixed(2)+"n\\)"; 
+      
+        } else{
+        
+           // generate format of problem
+           switch(random(0,2)){
+                
+                // cost of one unit
+                case 0:
+                prob += " What is the cost of one "+single+"?";
+                ans = "$\\("+price.toFixed(2)+"\\)"; 
+                break;
+                
+                // cost of x units
+                case 1:
+                var newNum = random(1,5)+num;  // num of new units
+                var newCost = formatDec(newNum*price); // cost of new amount
+                prob += " What is the cost of \\("+newNum+"\\) "+plural+"?";
+                ans = "$\\("+newCost.toFixed(2)+"\\)"; 
+                break;
+                
+                // given cost, determine number of units
+                case 2:
+                var newNum = random(1,5)+num;  // num of new pounds
+                var newCost = formatDec(newNum*price); // cost of new amount
+                prob += " If a purchase of "+plural+" cost $\\("+newCost.toFixed(2)+"\\), how many "+plural+" were purchased?";
+                ans = "\\("+newNum+"\\) "+plural; 
+                break;
+
+            }
+        }
+       
+       return {p:prob, a:ans};
+    }
+    
+    // function that draws the scatterplot with the line of best fit
+    function draw(line, scatterXs, scatterYs,plot,xScale,yMax, xLabel, yLabel,labelXs, labelYs, coordinateLabels) {
+    try {
+      
+      // compile the expression once
+      var expr = math.compile(line)
+
+      // evaluate the expression repeatedly for different values of x
+      var xValues = math.range(-10, 12*xScale, 0.5).toArray();
+      const yValues = xValues.map(function (x) {
+        return expr.eval({x: x});
+      })       
+       
+      // render the line 
+      var trace1 = {
+        x: xValues,
+        y: yValues,
+        type: 'scatter',
+        mode: 'lines',        
+        line: {
+          color: '#3F4591',
+          width: 2
+        },
+        name:"",
+      };
+      
+      // render the dots
+      var trace2 = {
+        x: scatterXs,
+        y: scatterYs,
+        type: 'scatter',
+        mode: 'markers',
+        marker: {
+          color: '#3F4591',
+          size: 8
+        },
+        hoverinfo:'none',
+        text: coordinateLabels,
+        textposition:'right',
+      };
+      
+      // label some of the coordinates
+      var trace3 = {
+        x: labelXs,
+        y: labelYs,
+        mode: 'text',
+        hoverinfo:'none',
+        text: coordinateLabels,
+        textposition:'bottom right',
+      };
+      
+      var x_axis_template ={
+        title: xLabel,
+        showgrid: true,
+        zeroline: true,
+        nticks: 12,
+        range: [0,11*xScale], 
+        gridcolor: '#bdbdbd', //grid color
+        gridwidth: 1.2, //grid width
+        zerolinecolor: 'black', // axes color
+        zerolinewidth: 1.5, // axes widths
+        tickfont: {
+          size: 14,
+       },
+      };
+      
+      var y_axis_template ={
+        title: yLabel,
+        showgrid: true,
+        zeroline: true,
+        nticks: 12,
+        range: [0,yMax], 
+        gridcolor: '#bdbdbd', //grid color
+        gridwidth: 1.2, //grid width
+        zerolinecolor: 'black', // axes color
+        zerolinewidth: 1.5, // axes widths
+        tickfont: {
+          size: 14,
+       },       
+      }; 
+      
+      // make grid smaller for mobile
+      var gridsize;
+      // gridsize= Math.min(.95*window.innerWidth,550);
+      
+      if(window.innerWidth > 601){
+         gridsize = 450;
+      }else{
+         gridsize = 325;
+      }
+      
+      var layout = {
+        xaxis:x_axis_template,
+        yaxis:y_axis_template,
+        showlegend: false,
+        width: gridsize,
+        height: gridsize,
+        hovermode: 'closest',   
+        font:{size: 18},
+        margin: {l: 60,  r: 30, t: 20,b:50}
+      };
+      
+      var data = [trace1,trace2,trace3];
+      
+      Plotly.newPlot(plot, data, layout,{displayModeBar: false});
+    }
+    catch (err) {
+      console.error(err)
+      alert(err)
+    }
+  }
+</script>
