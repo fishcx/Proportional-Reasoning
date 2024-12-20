@@ -28,7 +28,7 @@
 
         var type;
         // handles the formatting for selecting any type
-        if($("#type").val()=="any"){type = random(1,5);}
+        if($("#type").val()=="any"){type = random(1,6);}
         else{type = parseInt($("#type").val())}
         
         generate(type,letter);       
@@ -54,7 +54,8 @@
                          "https://www.youtube.com/watch?v=cY5l0UwVniI",
                          "https://www.youtube.com/watch?v=xXkxOPK9Svs",
                          "https://www.youtube.com/watch?v=mQIlC4YcmZo",
-                         "https://www.youtube.com/watch?v=ypeO1Xxy4cI"];
+                         "https://www.youtube.com/watch?v=ypeO1Xxy4cI",
+                         ""];
        
        if(videoLinks[type-1] != null && videoLinks[type-1].length > 0){ 
          $("#videoLink").attr("href", videoLinks[type-1]);
@@ -264,6 +265,13 @@
 
            break;
 
+           // Which is a Better Deal?
+           case 6: 
+           var opt = generateBetterDeals(); // helper function
+           problem = opt.p;
+           answer = opt.a;
+           break;
+
        }
             
        $("#generated").html(problem);
@@ -460,6 +468,64 @@
        return {p:prob, a:ans};
     }
     
+
+    // helper function to generate comparison prices of the same item
+    function generateBetterDeals(){
+       
+        var options = [
+                          {singular:"pound of ham", plural:"pounds of ham",price1:1.1,price2:3.99,number:random(2,5),diff:randomDec(0.1,0.3,2)},
+                          {singular:"pencil", plural:"pencils",price1:0.1,price2:0.5,number:random(2,12),diff:randomDec(0.01,0.1,2)},
+                          {singular:"glue stick", plural:"glue sticks",price1:0.35,price2:0.7,number:random(2,12),diff:randomDec(0.01,0.1,2)},
+                          {singular:"orange", plural:"oranges",price1:0.35,price2:1.25,number:random(2,10),diff:randomDec(0.1,0.3,2)},
+                          {singular:"slice of pizza", plural:"slices of pizza",price1:1,price2:2.99,number:random(2,10),diff:randomDec(0.1,0.3,2)},
+                          {singular:"soda", plural:"sodas",price1:0.75,price2:1.25,number:random(2,10),diff:randomDec(0.1,0.3,2)},
+                          {singular:"pound of chocolate", plural:"pounds of chocolate",price1:5.99,price2:8.99,number:random(2,10),diff:randomDec(0.1,0.3,2)},
+                          {singular:"banana", plural:"bananas",price1:0.1,price2:.4,number:random(2,6),diff:randomDec(0.01,0.2,2)},
+                          {singular:"oz of peanut butter", plural:"oz of peanut butter",price1:0.1,price2:.4,number:random(18,40),diff:randomDec(0.01,0.1,2)},
+                          {singular:"stick of gum", plural:"sticks of gum",price1:0.1,price2:.4,number:random(20,50),diff:randomDec(0.01,0.1,2)},
+                          {singular:"candy bar", plural:"candy bars",price1:.85,price2:1.99,number:random(2,10),diff:randomDec(0.1,0.3,2)}
+                      ];
+        
+        var chosen = options[random(0,options.length-1)];
+        var single = chosen.singular;
+        var plural = chosen.plural;
+        var priceMin = chosen.price1;
+        var priceMax = chosen.price2;
+        var num1 = chosen.number;  
+        var num2 = num1+random(2,5);
+        var price1 = randomDec(priceMin,priceMax,2);
+        var difference = chosen.diff;
+        var price2 = price1+difference;
+
+        // switch the order half the time so the better deal isn't always first
+        if( random(0,1) == 0 ){
+            var oldP1 = price1;
+            var oldP2 = price2;
+            price1 = oldP2;
+            price2 = oldP1;
+        }
+
+        var cost1 = formatDec(num1*price1);
+        var cost2 = formatDec(num2*price2);
+
+        var minPrice = Math.min(price1,price2);
+        var maxPrice = Math.max(price1,price2);
+
+        if(price1 == minPrice){
+          var ans = "\\("+num1+"\\) "+plural+" for $\\("+cost1.toFixed(2)+"\\)";
+        }else{
+          var ans = "\\("+num2+"\\) "+plural+" for $\\("+cost2.toFixed(2)+"\\)";
+        }
+        var cost1 = formatDec(price1*num1);
+        var cost2 = formatDec(price2*num2);     
+
+        var prob = "Determine the better deal: \\("+num1+"\\) "+plural+" for $\\("+cost1.toFixed(2)+"\\) or \\("+num2+"\\) "+plural+" for $\\("+cost2.toFixed(2)+"\\).";
+        ans += "<br>$\\("+minPrice.toFixed(2)+"\\) per "+single+" is cheaper than $\\("+maxPrice.toFixed(2)+"\\) per "+single;
+       
+       return {p:prob, a:ans};
+    }
+    
+
     // function that draws the scatterplot with the line of best fit
     function draw(line, scatterXs, scatterYs,plot,xScale,yMax, xLabel, yLabel,labelXs, labelYs, coordinateLabels) {
     try {
