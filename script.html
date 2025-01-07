@@ -55,7 +55,8 @@
                          "https://www.youtube.com/watch?v=xXkxOPK9Svs",
                          "https://www.youtube.com/watch?v=mQIlC4YcmZo",
                          "https://www.youtube.com/watch?v=ypeO1Xxy4cI",
-                         "https://www.youtube.com/watch?v=I1g4fmR47Ag"];
+                         "https://www.youtube.com/watch?v=I1g4fmR47Ag",
+                         ""];
        
        if(videoLinks[type-1] != null && videoLinks[type-1].length > 0){ 
          $("#videoLink").attr("href", videoLinks[type-1]);
@@ -272,6 +273,13 @@
            answer = opt.a;
            break;
 
+           // Comparing Ratios
+           case 7: 
+           var opt = generateCompareRatio(); // helper function
+           problem = opt.p;
+           answer = opt.a;
+           break;
+
        }
             
        $("#generated").html(problem);
@@ -467,7 +475,90 @@
        
        return {p:prob, a:ans};
     }
-    
+    // helper function to generate comparison of ratio problems
+    function generateCompareRatio(){
+        
+        var name1 = generateName().name;
+        var name2 = name1;
+        do{ name2 = generateName().name; } while( name1 == name2 ); // different names
+
+        var a1,a2,b1,b2,sf;
+
+        do{ 
+
+            a1 = random(1,5);
+            do{ a2 = Math.abs(a1+non_zero_random(-5,5)); } while (a2 == 0);
+            sf = random(2,4);
+            b1 = a1*sf;
+            b2 = a2*sf;
+
+            if(random(0,1) == 0){ b1 = Math.abs(b1+non_zero_random(-5,5)); }
+            else{ b2 = Math.abs(b2+non_zero_random(-5,5)); }
+
+         } while( (a1/a2) == (b1/b2) );
+
+        var tot1 = a1+a2;
+        var tot2 = b1+b2;
+
+        var per1 = formatDec(Math.round((a1/tot1)*100000)/1000);
+        var per2 = formatDec(Math.round((b1/tot2)*100000)/1000);
+
+        var prob,ans;
+
+        switch(random(0,2)){
+
+            // gray paint
+            case 0:
+            prob = name1+" mixes "+a1+" cups of black paint and "+a2+" cups of white paint. "+name2+" mixes "+b1+" cups of black paint and "+b2+" cups of white paint. Whose gray paint will be darker?";
+
+            if(per1 > per2){
+
+              ans = name1+"'s paint is darker since it is \\(\\cfrac{"+a1+"}{"+tot1+"}=\\approx"+per1+"\\% \\) black and "+name2+"'s paint is only \\(\\cfrac{"+b1+"}{"+tot2+"}=\\approx"+per2+"\\% \\) black.";
+
+            }
+            else{
+
+              ans = name2+"'s paint is darker since it is \\(\\cfrac{"+b1+"}{"+tot2+"}=\\approx"+per2+"\\% \\) black and "+name1+"'s paint is only \\(\\cfrac{"+a1+"}{"+tot1+"}=\\approx"+per1+"\\% \\) black.";
+
+            }
+            break;
+
+            // juice
+            case 1:
+            prob = name1+" mixes "+a2+" cups of melon and "+a1+" cups of apple. "+name2+" mixes "+b2+" cups of melon and "+b1+" cups of apple. Whose fruit salad will taste more appley?";
+
+            if(per1 > per2){
+
+              ans = name1+"'s fruit salad is more appley since it is \\(\\cfrac{"+a1+"}{"+tot1+"}=\\approx"+per1+"\\% \\) apple and "+name2+"'s fruit salad is only \\(\\cfrac{"+b1+"}{"+tot2+"}=\\approx"+per2+"\\% \\) apple.";
+
+            }
+            else{
+
+              ans = name2+"'s fruit salad is more appley since it is \\(\\cfrac{"+b1+"}{"+tot2+"}=\\approx"+per2+"\\% \\) apple and "+name1+"'s fruit salad is only \\(\\cfrac{"+a1+"}{"+tot1+"}=\\approx"+per1+"\\% \\) apple.";
+
+            }
+            break;
+
+            // chocolate milk
+            case 2:
+            prob = name1+" mixes "+a1+" cups of chocolate and "+a2+" cups of milk. "+name2+" mixes "+b1+" cups of chocolate and "+b2+" cups of milk. Whose milk will be more chocolately?";
+
+            if(per1 > per2){
+
+              ans = name1+"'s milk is more chocolately since it is \\(\\cfrac{"+a1+"}{"+tot1+"}=\\approx"+per1+"\\% \\) chocolate and "+name2+"'s milk is only \\(\\cfrac{"+b1+"}{"+tot2+"}=\\approx"+per2+"\\% \\) chocolate.";
+
+            }
+            else{
+
+              ans = name2+"'s milk is more chocolately since it is \\(\\cfrac{"+b1+"}{"+tot2+"}=\\approx"+per2+"\\% \\) chocolate and "+name1+"'s milk is only \\(\\cfrac{"+a1+"}{"+tot1+"}=\\approx"+per1+"\\% \\) chocolate.";
+
+            }
+            break;
+
+        }
+
+       return {p:prob, a:ans};
+    }    
 
     // helper function to generate comparison prices of the same item
     function generateBetterDeals(){
