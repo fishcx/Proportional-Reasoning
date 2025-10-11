@@ -28,7 +28,7 @@
 
         var type;
         // handles the formatting for selecting any type
-        if($("#type").val()=="any"){type = random(1,7);}
+        if($("#type").val()=="any"){type = random(1,8);}
         else{type = parseInt($("#type").val())}
         
         generate(type,letter);       
@@ -56,7 +56,8 @@
                          "https://www.youtube.com/watch?v=mQIlC4YcmZo",
                          "https://www.youtube.com/watch?v=ypeO1Xxy4cI",
                          "https://www.youtube.com/watch?v=I1g4fmR47Ag",
-                         "https://www.youtube.com/watch?v=wltSbQ0kUuA"];
+                         "https://www.youtube.com/watch?v=wltSbQ0kUuA",
+                         ""];
        
        if(videoLinks[type-1] != null && videoLinks[type-1].length > 0){ 
          $("#videoLink").attr("href", videoLinks[type-1]);
@@ -279,6 +280,126 @@
            problem = opt.p;
            answer = opt.a;
            break;
+
+           // Is it proportional?
+           case 8:
+           problem = "Is this proportional?";
+
+           switch(random(0,2)){
+
+              // given table
+              case 0:
+              
+                switch(random(0,2)){
+
+                    // linear table
+                    case 0:
+                    var line = getLinear();
+                    var scale = random(1,2); // scale factor so that the x's don't always count by 1
+                    var num = random(5,8);
+                    var start = random(-2,2);
+                    problem += tableMakerUsingSlope(line.n,line.d,line.b,scale,num,start);
+                    if(line.b === 0){ answer = `Yes, this is proportional.`; } else{ answer = `No, this is not proportional.` }
+                    break;
+
+                    // proportional table
+                    case 1:
+                    var line = getProportional();
+                    var scale = random(1,2); // scale factor so that the x's don't always count by 1
+                    var num = random(5,8);
+                    var start = random(-2,2);
+                    problem += tableMakerUsingSlope(line.n,line.d,line.b,scale,num,start);
+                    answer = `Yes, this is proportional.`; 
+                    break;
+
+                    // exponential table
+                    case 2:
+                    problem += getExpTable();
+                    answer = "No, this is not proportional."
+                    break;
+
+                }
+
+              break;
+
+              // given graph
+              case 1:
+
+                switch(random(0,3)){
+                    
+                    // linear
+                    case 0:
+                    var line = getLinear();
+                    var exp = line.n/line.d+"x + "+line.b;
+                    if(line.b === 0){ answer = `Yes, this is proportional.`; } else{ answer = `No, this is not proportional.` }
+                    break;
+
+                    // proportional
+                    case 1:
+                    var line = getProportional();
+                    var exp = line.n/line.d+"x + "+line.b;
+                    answer = `Yes, this is proportional.`; 
+                    break;
+
+                    // exponential
+                    case 2:
+                    var exp = `${random(2,5)}*${random(2,5)}^x`;
+                    answer = `No this is not proportional.`;
+                    break;
+
+                    // quadratic
+                    case 3:
+                    var exp = `${random(2,5)}x^2`;
+                    answer = `No this is not proportional.`;
+                    break;
+
+                }
+                drawProp(exp,"plot");
+                $('#plot').show();
+              break;
+
+              // given equation
+              case 2:
+
+                var depOptions = "ycmpb";
+                var indOptions = "xnwt";
+                var rate = randomDec(1,20,2);
+                
+                var eq = `\\(${depOptions.charAt(random(0,depOptions.length-1))} = ${rate} ${indOptions.charAt(random(0,indOptions.length-1))}\\)`;
+
+                switch(random(0,2)){
+
+                  // proportional
+                  case 0:
+                  problem = `Is this proportional? <br> ${eq}`;
+                  answer = `Yes, this is proportional.`;
+                  break;
+
+                  // not proportional - linear
+                  case 1:
+                  var constant = random(1,20);
+                  problem = `Is this proportional? <br>  ${eq} + \\(${constant}\\)`;
+                  answer = `No, this is not proportional.`;
+                  break;
+
+                  // not proportional - quadratic
+                  case 2:
+                  var constant = random(1,20);
+                    if(random(0,3) === 0){ 
+                      eq = `\\(${depOptions.charAt(random(0,depOptions.length-1))} = ${rate} ${indOptions.charAt(random(0,indOptions.length-1))}^2\\)`; 
+                    }
+                    else{
+                        eq = `\\(${depOptions.charAt(random(0,depOptions.length-1))} = ${indOptions.charAt(random(0,indOptions.length-1))}^2\\)`; 
+                    }
+                  problem = `Is this proportional? <br>  ${eq} + \\(${constant}\\)`;
+                  answer = `No, this is not proportional.`;
+                  break;
+
+                }
+
+              break;
+
+           }
 
        }
             
@@ -618,7 +739,7 @@
     }
     
 
-    // function that draws the scatterplot with the line of best fit
+    // function that draws the proportional graph
     function draw(line, scatterXs, scatterYs,plot,xScale,yMax, xLabel, yLabel,labelXs, labelYs, coordinateLabels) {
     try {
       
@@ -722,6 +843,343 @@
       
       var data = [trace1,trace2,trace3];
       
+      Plotly.newPlot(plot, data, layout,{displayModeBar: false});
+    }
+    catch (err) {
+      console.error(err)
+      alert(err)
+    }
+  }
+
+  // function to create a table
+    function tableMaker(x1,y1,slope,scale,num){
+       
+       var output = "";
+       var xstring = "<td>"+x1+"</td>"; 
+       var ystring = "<td>"+y1+"</td>";
+           
+       output += "<table border='1'>";
+       output += "<tr><td>\\(x\\)</td>";
+           
+       for(var i = 1; i < num; i++){
+              
+          xstring += "<td>"+(i*scale+x1)+"</td>";
+          ystring += "<td>"+(Math.round((i*scale*slope+y1)*1000)/1000)+"</td>";
+           
+       }
+           
+       output += xstring+"</tr><tr><td>\\(y\\)</td>"+ystring+"</tr>";
+       output += "</table>";
+       
+       return output;
+         
+    }
+    // function to rearrange the pieces of a polynomial
+    function mix(termArray){
+       
+       var output = "";
+       
+       if(termArray.length == 0){
+            
+            output = "0";
+            
+       }
+       else{
+       
+          var terms = shuffle(termArray);
+          
+          output = terms[0];
+          
+          for(var i = 1; i < terms.length; i++){
+              
+              output += " + "+terms[i];
+          
+          }
+          
+       }
+       
+       return output;
+    }
+    
+    function shuffle(array) {
+       array.sort(() => Math.random() - 0.5);
+       return array;
+    }
+    
+    // helper function for graphing to produce a line with a viable y-intercept and slope that'll fit in 10 by 10
+    function getLinear(){
+       var found = false;
+       var num, den, slope, yInt;
+       
+       do{
+           // generate values to be tested
+           yInt = random(-9,9); 
+           num = non_zero_random(-10,10);
+           den = non_zero_random(-5,5);
+           
+           // test to see if values produce another coordinate in 10 by 10 
+           for(var i = -9; i < 9; i++){
+           
+              var yVal = num/den*i+yInt;
+              
+              if(yVal > -10 && yVal < 10){
+                 
+                 found = true;
+              
+              }
+            
+           }
+       }
+       while(!found);
+       
+       return {n:num, d:den, b:yInt};
+    }    
+
+    // helper function for graphing to produce a proportional line with a slope that'll fit in 10 by 10
+    function getProportional(){
+       var found = false;
+       var num, den, slope, yInt;
+       
+       do{
+           // generate values to be tested
+           yInt = 0; 
+           num = non_zero_random(-10,10);
+           den = non_zero_random(-5,5);
+           
+           // test to see if values produce another coordinate in 10 by 10 
+           for(var i = -9; i < 9; i++){
+           
+              var yVal = num/den*i+yInt;
+              
+              if(yVal > -10 && yVal < 10){
+                 
+                 found = true;
+              
+              }
+            
+           }
+       }
+       while(!found);
+       
+       return {n:num, d:den, b:yInt};
+    } 
+// helper function for graphing to produce a line with a viable y-intercept and slope that'll fit in 10 by 10
+    function getExpTable(){
+      
+      var output = "";
+      var rate = random(2,5);
+      var xstring = ""; 
+      var ystring = "";
+      var tableSize = random(5,10);
+      var x1 = random(-2,2); 
+      var yInt = non_zero_random(1,5);
+
+      // produce the y values
+      var ys = [];
+      for(var i = 0; i < tableSize; i ++){             
+        ys.push(Math.round((yInt*Math.pow(rate,x1+i))*1000000)/1000000);
+      }  
+
+      output += "<table border='1'>";
+      output += "<tr><td>\\(x\\)</td>";          
+          
+      for(var i = 0; i < tableSize; i++){
+              
+        xstring += "<td>"+(i+x1)+"</td>";
+        ystring += "<td>"+ys[i]+"</td>";  
+           
+      }
+           
+      output += xstring+"</tr><tr><td>\\(y\\)</td>"+ystring+"</tr>";
+      output += "</table>";
+    
+      return output;
+
+    } 
+    // function to create a table
+    function tableMakerUsingSlope(yChange,xChange,yInt,scale,numCols,start){
+       
+      var xChangeAbs = Math.abs(xChange);
+
+       var x1 = start*xChangeAbs;
+       var y1 = round(((yChange/xChange)*x1+yInt)*10000)/10000; // shouldn't need to round here, but just in case
+       var output = "";
+       var xstring = "<td>"+x1+"</td>"; 
+       var ystring = "<td>"+y1+"</td>";
+           
+       output += "<table border='1'>";
+       output += "<tr><td>\\(x\\)</td>";
+           
+       for(var i = 1; i < numCols; i++){
+          var currX = i*xChangeAbs*scale+x1;
+          var currY = round(((yChange/xChange)*currX+yInt)*10000)/10000; // shouldn't need to round here eithere
+          xstring += "<td>"+currX+"</td>";
+          ystring += "<td>"+currY+"</td>";
+           
+       }
+           
+       output += xstring+"</tr><tr><td>\\(y\\)</td>"+ystring+"</tr>";
+       output += "</table>";
+       
+       return output;
+         
+    }
+    // function that draws the graph between -10 and 10
+    function drawProp(expression,plot) {
+    try {
+      // compile the expression once
+      var expr = math.compile(expression)
+
+      // evaluate the expression repeatedly for different values of x
+      var xValues = math.range(-11, 11, 0.1).toArray();
+      for(var i = 0; i < xValues.length; i ++){ 
+          xValues[i] = Math.round(xValues[i]*100)/100;
+      }
+      const yValues = xValues.map(function (x) {
+        return expr.eval({x: x});
+      })
+      
+      var xValues2 = [];
+      var yValues2 = []
+      for(var i = 0; i < xValues.length; i ++){         
+         var yvalue = expr.eval({x: xValues[i]});
+
+            // creates the "pretty points" to graph points at integer y-values
+            if(Number.isInteger(yvalue) && Number.isInteger(xValues[i])){        
+               xValues2.push(xValues[i]);
+               yValues2.push(yvalue);        
+            }          
+      }     
+      
+       
+      // render the line using plotly
+      var trace1 = {
+        x: xValues,
+        y: yValues,
+        type: 'scatter',
+        mode: 'lines',        
+        line: {
+          color: '#3F4591',
+          width: 2
+        },
+        name:"",
+      };
+      
+      var axis_template ={
+        showgrid: true,
+        zeroline: true,
+        nticks: 23,
+        range: [-11,11], 
+        gridcolor: '#BDBDBD', //grid color
+        gridwidth: 1.2, //grid width
+        zerolinecolor: 'black', // axes color
+        zerolinewidth: 1.5, // axes widths
+        showticklabels:false
+      };        
+      var axisMarkers =   {
+        x: [-0.25,10.75],
+        y: [10.75,-0.25],
+        mode: 'text',
+        text:["y","x"],
+        textposition:["left","bottom"],
+        textfont: {
+          size:18,
+        },
+        hoverinfo:'none'
+      };
+      // make grid smaller for mobile
+      var gridsize;
+      var indent;
+      // gridsize= Math.min(.95*window.innerWidth,550);
+      
+      if(window.innerWidth > 601){
+         gridsize = 550;
+         indent = 20;
+      }else{
+         gridsize = 350;
+         indent = 0;
+      }
+      
+      var xTickMarkLabels =   {
+        x: [-10.1,-9.1,-8.1,-7.1,-6.1,-5.1,-4.1,-3.1,-2.1,-1.1,0,1,2,3,4,5,6,7,8,9,10],
+        y: [-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1],
+        mode: 'text',
+        text:[-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10],
+        textposition:"bottom",
+        textfont: {
+          size:13,
+        },
+        hoverinfo:'none'
+      };   
+      
+      var yTickMarkLabels =   {
+        y: [-10.1,-9.1,-8.1,-7.1,-6.1,-5.1,-4.1,-3.1,-2.1,-1.1,0,1,2,3,4,5,6,7,8,9,10],
+        x: [-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1,-0.1],
+        mode: 'text',
+        text:[-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10],
+        textposition:"left",
+        textfont: {
+          size:13,
+        },
+        hoverinfo:'none'
+      };
+      
+      var layout = {
+        xaxis:axis_template,
+        yaxis:axis_template,
+        showlegend: false,
+        width: gridsize,
+        height: gridsize,
+        hovermode: 'closest',   
+        font:{size: 18},
+        margin: {l: indent,  r: 30, t: 20}
+      };
+      
+      layout.annotations= [
+      {
+         x: 0,
+         y: 11,
+         showarrow: true,
+         arrowsize:2,
+         arrowwidth:1,
+         arrowhead:3,
+         ax: 0,
+         ay: 35
+       },
+       {
+         x: 0,
+         y: -11,
+         showarrow: true,
+         arrowsize:2,
+         arrowwidth:1,
+         arrowhead:3,
+         ax: 0,
+         ay: -35
+       },
+       {
+         x: 11,
+         y: 0,
+         showarrow: true,
+         arrowsize:2,
+         arrowwidth:1,
+         arrowhead:3,
+         ax: -35,
+         ay: 0
+       },
+       {
+         x: -11,
+         y: 0,
+         showarrow: true,
+         arrowsize:2,
+         arrowwidth:1,
+         arrowhead:3,
+         ax: 35,
+         ay: 0
+       }
+
+     ];
+      
+      var data = [trace1,xTickMarkLabels,yTickMarkLabels,axisMarkers];
       Plotly.newPlot(plot, data, layout,{displayModeBar: false});
     }
     catch (err) {

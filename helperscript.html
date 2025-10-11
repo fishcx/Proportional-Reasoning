@@ -1,4 +1,8 @@
 <script>
+    function round(num){
+        return Math.round(num);
+    }
+    
     // removes all double signs
     function doublesigns(string){
        return string.replaceAll("-+", "-").replaceAll("- +", "-").replaceAll("+ -", "-").replaceAll("- -", "+").replaceAll("+-", "-").replaceAll("-- ", "+");
