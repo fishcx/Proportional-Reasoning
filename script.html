@@ -436,7 +436,7 @@
 
     function generateWritingRatio(){
 
-      var people, problem, answer, options, value1, value2, sf, v1, v2;
+      var people, problem, answer, options, value1, value2, sf, v1, v2, per1, per2, wper1;
       switch(random(0,3)){
 
         case 0: people = "7th graders"; break;
@@ -461,9 +461,13 @@
       value1 = sf*v1;
       value2 = sf*v2;
 
+      per1 = formatDec(round(v1/(v1+v2)*100000)/1000);
+      per2 = formatDec(round(v2/(v1+v2)*100000)/1000);
+      wper1 = formatDec(round(v1/(v2)*100000)/1000);
+
       problem = `${people} were surveyed to determine if they would prefer ${options[0]} or ${options[1]}. ${value1} selected ${options[0]} and ${value2} selected ${options[1]}. Determine if the statement below is true or false.<br><br>`;
 
-      switch(random(0,8)){
+      switch(random(0,12)){
 
           case 0:
           problem += `The ratio of ${people} who chose ${options[0]} to ${options[1]} is equivalent to ${v1} : ${v2}`;
@@ -508,6 +512,26 @@
           case 8:
           problem += `The ratio of ${people} who selected ${options[1]} to ${options[0]} is equivalent to \\(${simplifyFracNoInt(v1,v2)}\\)`;
           answer = `False. The ratio is equivalent to \\(\\frac{${value2}}{${value1}}=${simplifyFracNoInt(v2,v1)}\\).`;
+          break;
+
+          case 9:
+          problem += `The percent of all ${people} surveyed who selected ${options[0]} is equivalent to \\(${per1}\\%\\).`;
+          answer = `True. \\(\\frac{${value1}}{${value1+value2}}=${simplifyFrac(value1,value1+value2)} = ${per1}\\%\\)`;
+          break;
+
+          case 10:
+          problem += `The percent of all ${people} surveyed who selected ${options[1]} is equivalent to \\(${per2}\\%\\).`;
+          answer = `True. \\(\\frac{${value2}}{${value1+value2}}=${simplifyFrac(value2,value1+value2)} = ${per2}\\%\\)`;
+          break;
+
+          case 11:
+          problem += `The percent of all ${people} surveyed who selected ${options[0]} is equivalent to \\(${wper1}\\%\\).`;
+          answer = `False. \\(\\frac{${value1}}{${value1+value2}}=${simplifyFrac(value1,value1+value2)} = ${per1}\\%\\)`;
+          break;
+
+          case 12:
+          problem += `The percent of all ${people} surveyed who selected ${options[1]} is equivalent to \\(${per1}\\%\\).`;
+          answer = `False. \\(\\frac{${value2}}{${value1+value2}}=${simplifyFrac(value2,value1+value2)} = ${per2}\\%\\)`;
           break;
 
       }
