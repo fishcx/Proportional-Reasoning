@@ -28,7 +28,7 @@
 
         var type;
         // handles the formatting for selecting any type
-        if($("#type").val()=="any"){type = random(1,8);}
+        if($("#type").val()=="any"){type = random(1,9);}
         else{type = parseInt($("#type").val())}
         
         generate(type,letter);       
@@ -57,7 +57,8 @@
                          "https://www.youtube.com/watch?v=ypeO1Xxy4cI",
                          "https://www.youtube.com/watch?v=I1g4fmR47Ag",
                          "https://www.youtube.com/watch?v=wltSbQ0kUuA",
-                         "https://www.youtube.com/watch?v=cDKmgkmuXds"];
+                         "https://www.youtube.com/watch?v=cDKmgkmuXds",
+                         ""];
        
        if(videoLinks[type-1] != null && videoLinks[type-1].length > 0){ 
          $("#videoLink").attr("href", videoLinks[type-1]);
@@ -401,6 +402,13 @@
 
            }
 
+            // Writing Ratios
+           case 9: 
+           var opt = generateWritingRatio(); // helper function
+           problem = opt.p;
+           answer = opt.a;
+           break;
+
        }
             
        $("#generated").html(problem);
@@ -408,6 +416,106 @@
        renderMathInElement(document.body);
 	}
     
+// simplify fraction
+    function simplifyFracNoInt(num, denom){
+     
+     // format the negative better so that it isn't in a fraction
+     var neg = "";
+     if((num/denom) < 0){
+        
+        num = Math.abs(num);
+        denom = Math.abs(denom);
+        neg = "-";
+        
+     }
+
+        var g = gcd(num,denom);
+        return neg+"\\frac{"+(num/g)+"}{"+(denom/g)+"}";
+        
+    }
+
+    function generateWritingRatio(){
+
+      var people, problem, answer, options, value1, value2, sf, v1, v2;
+      switch(random(0,3)){
+
+        case 0: people = "7th graders"; break;
+        case 1: people = "Students at Merton Williams Middle School"; break;
+        case 2: people = "Hilton residents"; break;
+        case 3: people = "8th graders"; break;
+
+      }
+
+      switch(random(0,3)){
+
+        case 0: options = ["McDonald's", "Chick-fil-A"]; break;
+        case 1: options = ["pizza", "subs"]; break;
+        case 2: options = ["an amusement park", "a science museum"]; break;
+        case 3: options = ["ice cream", "cookies"]; break;
+
+      }
+
+      sf = random(10,20);
+      v1 = random(1,6);
+      v2 = v1+random(1,6);
+      value1 = sf*v1;
+      value2 = sf*v2;
+
+      problem = `${people} were surveyed to determine if they would prefer ${options[0]} or ${options[1]}. ${value1} selected ${options[0]} and ${value2} selected ${options[1]}. Determine if the statement below is true or false.<br><br>`;
+
+      switch(random(0,8)){
+
+          case 0:
+          problem += `The ratio of ${people} who chose ${options[0]} to ${options[1]} is equivalent to ${v1} : ${v2}`;
+          answer = `True. Divide the original ratio by ${sf}.`;
+          break;
+
+          case 1:
+          problem += `The ratio of ${people} who chose ${options[0]} to ${options[1]} is equivalent to ${v1} : ${v2}`;
+          answer = `False. The order is switched around.`;
+          break;
+
+          case 2:
+          problem += `The fraction of all ${people} surveyed who selected ${options[0]} is equivalent to \\(${simplifyFracNoInt(value1,value1+value2)}\\).`;
+          answer = `True. \\(\\frac{${value1}}{${value1+value2}}=${simplifyFrac(value1,value1+value2)}\\)`;
+          break;
+
+          case 3:
+          problem += `The fraction of all ${people} surveyed who selected ${options[1]} is equivalent to \\(${simplifyFracNoInt(value2,value1+value2)}\\).`;
+          answer = `True. \\(\\frac{${value2}}{${value1+value2}}=${simplifyFrac(value2,value1+value2)}\\)`;
+          break;
+
+          case 4:
+          problem += `The fraction of all ${people} surveyed who selected ${options[0]} is equivalent to \\(${simplifyFracNoInt(value1,value2)}\\).`;
+          answer = `False. The fraction is equivalent to \\(\\frac{${value1}}{${value1+value2}}=${simplifyFracNoInt(value1,value1+value2)}\\)`;
+          break;
+
+          case 5:
+          problem += `The ratio of ${people} who selected ${options[0]} to ${options[1]} is equivalent to \\(${simplifyFracNoInt(v1,v2)}\\)`;
+          answer = `True. \\(\\frac{${value1}}{${value2}}=${simplifyFracNoInt(v1,v2)}\\).`;
+          break;
+
+          case 6:
+          problem += `The ratio of ${people} who selected ${options[0]} to ${options[1]} is equivalent to \\(${simplifyFracNoInt(v2,v1)}\\)`;
+          answer = `False. The ratio is equivalent to \\(\\frac{${value1}}{${value2}}=${simplifyFracNoInt(v1,v2)}\\).`;
+          break;
+          
+          case 7:
+          problem += `The ratio of ${people} who selected ${options[1]} to ${options[0]} is equivalent to \\(${simplifyFracNoInt(v2,v1)}\\)`;
+          answer = `True. \\(\\frac{${value2}}{${value1}}=${simplifyFracNoInt(v2,v1)}\\).`;
+          break;
+
+          case 8:
+          problem += `The ratio of ${people} who selected ${options[1]} to ${options[0]} is equivalent to \\(${simplifyFracNoInt(v1,v2)}\\)`;
+          answer = `False. The ratio is equivalent to \\(\\frac{${value2}}{${value1}}=${simplifyFracNoInt(v2,v1)}\\).`;
+          break;
+
+      }
+
+    return {p: problem, a: answer}
+
+    }
+
     function getMultRandom(min,max,num){
        
        var arr = [];
