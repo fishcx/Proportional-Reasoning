@@ -471,7 +471,7 @@
 
       problem = `A survey of ${people} found ${value1} preferred ${options[0]} and ${value2} preferred ${options[1]}. Is the statement true or false?.<br><br>`;
 
-      switch(random(0,12)){
+      switch(random(0,14)){
 
           case 0:
           problem += `The ratio of ${people} who chose ${options[0]} to ${options[1]} is equivalent to ${v1} : ${v2}`;
@@ -479,61 +479,71 @@
           break;
 
           case 1:
-          problem += `The ratio of ${people} who chose ${options[0]} to ${options[1]} is equivalent to ${v1} : ${v2}`;
-          answer = `False. The order is switched around.`;
+          problem += `The ratio of ${people} who chose ${options[1]} to ${options[0]} is equivalent to ${v1} : ${v2}`;
+          answer = `False. The ratio should be ${v2} : ${v1}.`;
           break;
 
           case 2:
+          problem += `The ratio of ${people} who chose ${options[0]} to ${options[1]} is equivalent to ${v2} : ${v1}`;
+          answer = `False. The ratio should be ${v1} : ${v2}.`;
+          break;
+
+          case 3:
+          problem += `The ratio of ${people} who chose ${options[1]} to ${options[0]} is equivalent to ${v2} : ${v1}`;
+          answer = `True. Divide the original ratio by ${sf}.`;
+          break;
+
+          case 4:
           problem += `The fraction of all ${people} surveyed who selected ${options[0]} is equivalent to \\(${simplifyFracNoInt(value1,value1+value2)}\\).`;
           answer = `True. \\(\\frac{${value1}}{${value1+value2}}=${simplifyFrac(value1,value1+value2)}\\)`;
           break;
 
-          case 3:
+          case 5:
           problem += `The fraction of all ${people} surveyed who selected ${options[1]} is equivalent to \\(${simplifyFracNoInt(value2,value1+value2)}\\).`;
           answer = `True. \\(\\frac{${value2}}{${value1+value2}}=${simplifyFrac(value2,value1+value2)}\\)`;
           break;
 
-          case 4:
+          case 6:
           problem += `The fraction of all ${people} surveyed who selected ${options[0]} is equivalent to \\(${simplifyFracNoInt(value1,value2)}\\).`;
           answer = `False. The fraction is equivalent to \\(\\frac{${value1}}{${value1+value2}}=${simplifyFracNoInt(value1,value1+value2)}\\)`;
           break;
 
-          case 5:
+          case 7:
           problem += `The ratio of ${people} who selected ${options[0]} to ${options[1]} is equivalent to \\(${simplifyFracNoInt(v1,v2)}\\)`;
           answer = `True. \\(\\frac{${value1}}{${value2}}=${simplifyFracNoInt(v1,v2)}\\).`;
           break;
 
-          case 6:
+          case 8:
           problem += `The ratio of ${people} who selected ${options[0]} to ${options[1]} is equivalent to \\(${simplifyFracNoInt(v2,v1)}\\)`;
           answer = `False. The ratio is equivalent to \\(\\frac{${value1}}{${value2}}=${simplifyFracNoInt(v1,v2)}\\).`;
           break;
           
-          case 7:
+          case 9:
           problem += `The ratio of ${people} who selected ${options[1]} to ${options[0]} is equivalent to \\(${simplifyFracNoInt(v2,v1)}\\)`;
           answer = `True. \\(\\frac{${value2}}{${value1}}=${simplifyFracNoInt(v2,v1)}\\).`;
           break;
 
-          case 8:
+          case 10:
           problem += `The ratio of ${people} who selected ${options[1]} to ${options[0]} is equivalent to \\(${simplifyFracNoInt(v1,v2)}\\)`;
           answer = `False. The ratio is equivalent to \\(\\frac{${value2}}{${value1}}=${simplifyFracNoInt(v2,v1)}\\).`;
           break;
 
-          case 9:
+          case 11:
           problem += `The percent of all ${people} surveyed who selected ${options[0]} is equivalent to \\(${per1}\\%\\).`;
           answer = `True. \\(\\frac{${value1}}{${value1+value2}}=${simplifyFrac(value1,value1+value2)} = ${per1}\\%\\)`;
           break;
 
-          case 10:
+          case 12:
           problem += `The percent of all ${people} surveyed who selected ${options[1]} is equivalent to \\(${per2}\\%\\).`;
           answer = `True. \\(\\frac{${value2}}{${value1+value2}}=${simplifyFrac(value2,value1+value2)} = ${per2}\\%\\)`;
           break;
 
-          case 11:
+          case 13:
           problem += `The percent of all ${people} surveyed who selected ${options[0]} is equivalent to \\(${wper1}\\%\\).`;
           answer = `False. \\(\\frac{${value1}}{${value1+value2}}=${simplifyFrac(value1,value1+value2)} = ${per1}\\%\\)`;
           break;
 
-          case 12:
+          case 14:
           problem += `The percent of all ${people} surveyed who selected ${options[1]} is equivalent to \\(${per1}\\%\\).`;
           answer = `False. \\(\\frac{${value2}}{${value1+value2}}=${simplifyFrac(value2,value1+value2)} = ${per2}\\%\\)`;
           break;
