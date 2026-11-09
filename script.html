@@ -438,14 +438,17 @@
     function generateWritingRatio(){
 
       var people, problem, answer, options, value1, value2, sf, v1, v2, per1, per2, wper1;
+      /*
       switch(random(0,3)){
 
         case 0: people = "7th graders"; break;
-        case 1: people = "Students at Merton Williams Middle School"; break;
+        case 1: people = "students at Merton Williams Middle School"; break;
         case 2: people = "Hilton residents"; break;
         case 3: people = "8th graders"; break;
 
-      }
+      } */
+      // keep it simple to shorten the wording
+      people = "students";
 
       switch(random(0,3)){
 
@@ -466,7 +469,7 @@
       per2 = formatDec(round(v2/(v1+v2)*100000)/1000);
       wper1 = formatDec(round(v1/(v2)*100000)/1000);
 
-      problem = `${people} were surveyed to determine if they would prefer ${options[0]} or ${options[1]}. ${value1} selected ${options[0]} and ${value2} selected ${options[1]}. Determine if the statement below is true or false.<br><br>`;
+      problem = `A survey of ${people} found ${value1} preferred ${options[0]} and ${value2} preferred ${options[1]}. Is the statement true or false?.<br><br>`;
 
       switch(random(0,12)){
 
