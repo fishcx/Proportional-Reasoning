@@ -745,10 +745,6 @@
     // helper function to generate comparison of ratio problems
     function generateCompareRatio(){
         
-        var name1 = generateName().name;
-        var name2 = name1;
-        do{ name2 = generateName().name; } while( name1 == name2 ); // different names
-
         var a1,a2,b1,b2,sf;
 
         do{ 
@@ -767,63 +763,54 @@
 
         var tot1 = a1+a2;
         var tot2 = b1+b2;
+        var plural1,plural2,plural3,plural4;
+        if(a1 > 1){ plural1 = `s`; }else {plural1 = ``;}
+        if(a2 > 1){ plural2 = `s`; }else {plural2 = ``;}
+        if(b1 > 1){ plural3 = `s`; }else {plural3 = ``;}
+        if(b2 > 1){ plural4 = `s`; }else {plural4 = ``;}
 
         var per1 = formatDec(Math.round((a1/tot1)*100000)/1000);
         var per2 = formatDec(Math.round((b1/tot2)*100000)/1000);
 
-        var prob,ans;
+        var prob,ans,compareword1,compareword2;
 
         switch(random(0,2)){
 
             // gray paint
             case 0:
-            prob = name1+" mixes "+a1+" cups of black paint and "+a2+" cups of white paint. "+name2+" mixes "+b1+" cups of black paint and "+b2+" cups of white paint. Whose gray paint will be darker?";
-
-            if(per1 > per2){
-
-              ans = name1+"'s paint is darker since it is \\(\\cfrac{"+a1+"}{"+tot1+"}=\\approx"+per1+"\\% \\) black and "+name2+"'s paint is only \\(\\cfrac{"+b1+"}{"+tot2+"}=\\approx"+per2+"\\% \\) black.";
-
-            }
-            else{
-
-              ans = name2+"'s paint is darker since it is \\(\\cfrac{"+b1+"}{"+tot2+"}=\\approx"+per2+"\\% \\) black and "+name1+"'s paint is only \\(\\cfrac{"+a1+"}{"+tot1+"}=\\approx"+per1+"\\% \\) black.";
-
-            }
+            prob = `<b>Mix A:</b> ${a1} cup${plural1} of red paint and ${a2} cup${plural2} of white paint. <br><b>Mix B:</b> ${b1} cup${plural3} of red paint and ${b2} cup${plural4} of white paint. <br>Which paint is darker?`;
+            compareword1 = `darker`;
+            compareword2 = `red`;
+           
             break;
 
             // juice
             case 1:
-            prob = name1+" mixes "+a2+" cups of melon and "+a1+" cups of apple. "+name2+" mixes "+b2+" cups of melon and "+b1+" cups of apple. Whose fruit salad will taste more appley?";
+            prob = `<b>Mix A:</b> ${a2} cup${plural2} of melon and ${a1} cup${plural1} of apple. <br><b>Mix B:</b> ${b2} cup${plural4} of melon and ${b1} cup${plural3} of apple. <br>Which is more appley?`;
+            compareword1 = `more appley`;
+            compareword2 = `apple`;
 
-            if(per1 > per2){
-
-              ans = name1+"'s fruit salad is more appley since it is \\(\\cfrac{"+a1+"}{"+tot1+"}=\\approx"+per1+"\\% \\) apple and "+name2+"'s fruit salad is only \\(\\cfrac{"+b1+"}{"+tot2+"}=\\approx"+per2+"\\% \\) apple.";
-
-            }
-            else{
-
-              ans = name2+"'s fruit salad is more appley since it is \\(\\cfrac{"+b1+"}{"+tot2+"}=\\approx"+per2+"\\% \\) apple and "+name1+"'s fruit salad is only \\(\\cfrac{"+a1+"}{"+tot1+"}=\\approx"+per1+"\\% \\) apple.";
-
-            }
             break;
 
             // chocolate milk
             case 2:
-            prob = name1+" mixes "+a1+" cups of chocolate and "+a2+" cups of milk. "+name2+" mixes "+b1+" cups of chocolate and "+b2+" cups of milk. Whose milk will be more chocolatey?";
-
-            if(per1 > per2){
-
-              ans = name1+"'s milk is more chocolatey since it is \\(\\cfrac{"+a1+"}{"+tot1+"}=\\approx"+per1+"\\% \\) chocolate and "+name2+"'s milk is only \\(\\cfrac{"+b1+"}{"+tot2+"}=\\approx"+per2+"\\% \\) chocolate.";
-
-            }
-            else{
-
-              ans = name2+"'s milk is more chocolatey since it is \\(\\cfrac{"+b1+"}{"+tot2+"}=\\approx"+per2+"\\% \\) chocolate and "+name1+"'s milk is only \\(\\cfrac{"+a1+"}{"+tot1+"}=\\approx"+per1+"\\% \\) chocolate.";
-
-            }
+            prob = `<b>Mix A:</b> ${a1} cup${plural1} of chocolate and ${a2} cup${plural2} of milk. <br><b>Mix B:</b> ${b1} cup${plural3} of chocolate and ${b2} cup${plural4} of milk. <br>Which is more chocolatey?`;
+            compareword1 = `more chocolatey`;
+            compareword2 = `chocolate`
             break;
 
         }
+
+         if(per1 > per2){
+
+             ans = `Mix A is ${compareword1} since it is \\(\\cfrac{${a1}}{${tot1}}=\\approx${per1}\\% \\) ${compareword2} and Mix B is only \\(\\cfrac{${b1}}{${tot2}}=\\approx${per2}\\% \\) ${compareword2}.`;
+
+          }
+          else{
+
+              ans = `Mix B is ${compareword1} since it is \\(\\cfrac{${b1}}{${tot2}}=\\approx${per2}\\% \\) ${compareword2} and Mix A is only \\(\\cfrac{${a1}}{${tot1}}=\\approx${per1}\\% \\) ${compareword2}.`;
+
+          }
 
        return {p:prob, a:ans};
     }    
