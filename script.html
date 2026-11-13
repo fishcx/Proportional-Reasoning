@@ -772,6 +772,10 @@
         var per1 = formatDec(Math.round((a1/tot1)*100000)/1000);
         var per2 = formatDec(Math.round((b1/tot2)*100000)/1000);
 
+        var symb1 = '='; var symb2 = `=`;
+        if(per1 != formatDec((a1/tot1)*100)){ symb1 = `\\approx`}
+        if(per2 != formatDec((b1/tot2)*100)){ symb2 = `\\approx`}
+
         var prob,ans,compareword1,compareword2;
 
         switch(random(0,2)){
@@ -803,12 +807,12 @@
 
          if(per1 > per2){
 
-             ans = `Mix A is ${compareword1} since it is \\(\\cfrac{${a1}}{${tot1}}=\\approx${per1}\\% \\) ${compareword2} and Mix B is only \\(\\cfrac{${b1}}{${tot2}}=\\approx${per2}\\% \\) ${compareword2}.`;
+             ans = `Mix A is ${compareword1} since it is \\(\\cfrac{${a1}}{${tot1}}${symb1}${per1}\\% \\) ${compareword2} and Mix B is only \\(\\cfrac{${b1}}{${tot2}}${symb2}${per2}\\% \\) ${compareword2}.`;
 
           }
           else{
 
-              ans = `Mix B is ${compareword1} since it is \\(\\cfrac{${b1}}{${tot2}}=\\approx${per2}\\% \\) ${compareword2} and Mix A is only \\(\\cfrac{${a1}}{${tot1}}=\\approx${per1}\\% \\) ${compareword2}.`;
+              ans = `Mix B is ${compareword1} since it is \\(\\cfrac{${b1}}{${tot2}}${symb2}${per2}\\% \\) ${compareword2} and Mix A is only \\(\\cfrac{${a1}}{${tot1}}${symb1}${per1}\\% \\) ${compareword2}.`;
 
           }
 
