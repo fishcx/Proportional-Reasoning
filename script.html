@@ -79,36 +79,48 @@
            case 1: 
            a = random(2,15);
            b = random(2,10)+a;
-           c = randomDec(2,8,1); // scale factor
+           c = random(2,25); // scale factor
            d = formatDec(c*a); 
            e = formatDec(c*b);
            
+          var topleft,botleft,topright,botright,ans;
+
+          // a/b = d/e
            switch(random(0,3)){
            
                // answer is a
                case 0:
-               problem = "\\(\\cfrac{"+letter+"}{"+b+"}=\\cfrac{"+d+"}{"+e+"}\\)";
-               answer = "\\("+letter+" = "+a+"\\)";
+               topleft = letter; botleft = b; topright = d; botright = e;
+               ans = a;
                break;
                
                // answer is b
                case 1:
-               problem = "\\(\\cfrac{"+a+"}{"+letter+"}=\\cfrac{"+d+"}{"+e+"}\\)";
-               answer = "\\("+letter+" = "+b+"\\)";
+               topleft = a; botleft = letter; topright = d; botright = e;
+               ans = b;
                break;
                
                // answer is d
                case 2:
-               problem = "\\(\\cfrac{"+a+"}{"+b+"}=\\cfrac{"+letter+"}{"+e+"}\\)";
-               answer = "\\("+letter+" = "+d+"\\)";
+               topleft = a; botleft = b; topright = letter; botright = e;
+               ans = d;
                break;
                
                // answer is e
                case 3:
-               problem = "\\(\\cfrac{"+a+"}{"+b+"}=\\cfrac{"+d+"}{"+letter+"}\\)";
-               answer = "\\("+letter+" = "+e+"\\)";
+               topleft = a; botleft = b; topright = d; botright = letter;
+               ans = e;
                break;
            }
+
+          var tempTopL = topleft; var tempBotL = botleft; var tempTopR = topright; var tempBotR = botright;
+
+          // flip the proportions 50% of the time to not always have the biggest on top
+          if(random(0,1)== 0){ topleft = tempBotL; botleft = tempTopL; topright = tempBotR; botright = tempTopR;}
+
+          problem = `\\(\\cfrac{${topleft}}{${botleft}}=\\cfrac{${topright}}{${botright}}\\)`;
+          answer = `\\(${letter}=${ans}\\)`;
+
            break;
            
            // Writing and Solving Proportions
