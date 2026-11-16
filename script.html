@@ -633,10 +633,10 @@
         var prob1 = "";
         var graphStarter = "Suppose "+chosen.noun+" can "+chosen.verb+" "+chosen.unit1+" as shown in the graph";
         if(chosen.unit1 == "dollars"){
-           prob1 = "Suppose "+chosen.noun+" can "+chosen.verb+" $\\("+formatDec(chosen.unitRate*chosen.num).toFixed(2)+"\\)  "+chosen.prep+" \\("+chosen.num+"\\) "+chosen.unit2_plural+".";
+           prob1 = `Suppose ${chosen.noun} can ${chosen.verb} $${formatDec(chosen.unitRate*chosen.num).toFixed(2)}  ${chosen.prep} ${chosen.num} ${chosen.unit2_plural}.`;
         }
         else{
-           prob1 = "Suppose "+chosen.noun+" can "+chosen.verb+" \\("+formatDec(chosen.unitRate*chosen.num)+"\\) "+chosen.unit1+" "+chosen.prep+" \\("+chosen.num+"\\) "+chosen.unit2_plural+".";    
+           prob1 = `Suppose ${chosen.noun} can ${chosen.verb} ${formatDec(chosen.unitRate*chosen.num)} ${chosen.unit1} ${chosen.prep} ${chosen.num} ${chosen.unit2_plural}.`;    
         }
         var ans = "";
         
@@ -644,7 +644,7 @@
         
         if(equation){
 
-          prob2 += " What equation relates the "+chosen.unit1+", \\("+chosen.unit1.charAt(0)+"\\), to the number of "+chosen.unit2_plural+", \\("+chosen.unit2_plural.charAt(0)+"\\)?";
+          prob2 += ` What equation relates the ${chosen.unit1}, ${chosen.unit1.charAt(0)}, to the number of ${chosen.unit2_plural}, ${chosen.unit2_plural.charAt(0)}?`;
           ans = "\\("+chosen.unit1.charAt(0)+" = "+chosen.unitRate+chosen.unit2_plural.charAt(0)+"\\)"; 
 
         } else{
@@ -654,12 +654,12 @@
                 
                 // unit rate
                 case 0:
-                prob2 += " How "+chosen.ques+" can "+chosen.pronoun+" "+chosen.verb+" "+chosen.prep+" \\( 1 \\) "+chosen.unit2_singular+"?";
+                prob2 += ` How ${chosen.ques} can ${chosen.pronoun} ${chosen.verb} ${chosen.prep} 1 ${chosen.unit2_singular}?`;
                 if(chosen.unit1 == "dollars"){
-                   ans = "$\\("+chosen.unitRate.toFixed(2)+"\\)"; 
+                   ans = `$${chosen.unitRate.toFixed(2)}`; 
                 }
                 else{
-                   ans = "\\("+chosen.unitRate+"\\) "+chosen.unit1; 
+                   ans = `${chosen.unitRate} ${chosen.unit1}`; 
                 } 
                 break;
                 
@@ -667,12 +667,12 @@
                 case 1:
                 var newNum = random(1,5)+chosen.num;  // num of new units
                 var newAmount = formatDec(newNum*chosen.unitRate); // new amount
-                prob2 += " How "+chosen.ques+" can "+chosen.pronoun+" "+chosen.verb+" "+chosen.prep+" \\( "+newNum+" \\) "+chosen.unit2_plural+"?";
+                prob2 += ` How ${chosen.ques} can ${chosen.pronoun} ${chosen.verb} ${chosen.prep} ${newNum} ${chosen.unit2_plural}?`;
                 if(chosen.unit1 == "dollars"){
-                   ans = "$\\("+newAmount.toFixed(2)+"\\)"; 
+                   ans = `$${newAmount.toFixed(2)}`; 
                 }
                 else{
-                   ans = "\\("+newAmount+"\\) "+chosen.unit1; 
+                   ans = `${newAmount} ${chosen.unit1}`; 
                 }
                 break;
                 
@@ -681,12 +681,12 @@
                 var newNum = random(1,5)+chosen.num;  // num of new units
                 var newAmount = formatDec(newNum*chosen.unitRate); // new amount
                 if(chosen.unit1 == "dollars"){
-                  prob2 += " How many "+chosen.unit2_plural+" are needed to "+chosen.verb+" $\\("+newAmount.toFixed(2)+"\\)?";
+                  prob2 += ` How many ${chosen.unit2_plural} are needed to ${chosen.verb} $${newAmount.toFixed(2)}?`;
                 }
                 else{
-                  prob2 += " How many "+chosen.unit2_plural+" are needed to "+chosen.verb+" \\("+newAmount+"\\) "+chosen.unit1+"?";
+                  prob2 += ` How many ${chosen.unit2_plural} are needed to ${chosen.verb} ${newAmount} ${chosen.unit1}?`;
                 }
-                ans = "\\("+newNum+"\\) "+chosen.unit2_plural; 
+                ans = `${newNum} ${chosen.unit2_plural}`; 
                 break;
             }
         }
@@ -714,13 +714,13 @@
         var price = chosen.price;
         var num = chosen.number;            
         var cost = formatDec(price*num);  
-        var prob = "Suppose \\("+num+"\\) "+plural+" cost $\\("+cost.toFixed(2)+"\\).";
+        var prob = `Suppose ${num} ${plural} cost $${cost.toFixed(2)}.`;
         var ans = "";
         
         if(equation){
           
-          prob += " What equation relates the total cost, \\(C\\), to the number of "+plural+", \\(n\\)?";
-          ans = "\\(C = "+price.toFixed(2)+"n\\)"; 
+          prob += ` What equation relates the total cost, \\(C\\), to the number of ${plural}, \\(n\\)?`;
+          ans = `\\(C = ${price.toFixed(2)}n\\)`; 
       
         } else{
         
@@ -729,24 +729,24 @@
                 
                 // cost of one unit
                 case 0:
-                prob += " What is the cost of one "+single+"?";
-                ans = "$\\("+price.toFixed(2)+"\\)"; 
+                prob += ` What is the cost of one ${single}?`;
+                ans = `$${price.toFixed(2)}`; 
                 break;
                 
                 // cost of x units
                 case 1:
                 var newNum = random(1,5)+num;  // num of new units
                 var newCost = formatDec(newNum*price); // cost of new amount
-                prob += " What is the cost of \\("+newNum+"\\) "+plural+"?";
-                ans = "$\\("+newCost.toFixed(2)+"\\)"; 
+                prob += ` What is the cost of ${newNum} ${plural}?`;
+                ans = `$${newCost.toFixed(2)}`; 
                 break;
                 
                 // given cost, determine number of units
                 case 2:
                 var newNum = random(1,5)+num;  // num of new pounds
                 var newCost = formatDec(newNum*price); // cost of new amount
-                prob += " If a purchase of "+plural+" cost $\\("+newCost.toFixed(2)+"\\), how many "+plural+" were purchased?";
-                ans = "\\("+newNum+"\\) "+plural; 
+                prob += ` If a purchase of ${plural} cost $${newCost.toFixed(2)}, how many ${plural} were purchased?`;
+                ans = `${newNum} ${plural}`; 
                 break;
 
             }
