@@ -601,6 +601,7 @@
                           {name:"Anthony", pronoun:"he"},
                           {name:"Rebecca", pronoun:"she"},
                           {name:"Jen", pronoun:"she"},
+                          {name:"Riley", pronoun:"she"},
                           {name:"Jeff", pronoun:"he"}
                       ];
         
@@ -644,7 +645,7 @@
         
         if(equation){
 
-          prob2 += ` What equation relates the ${chosen.unit1}, ${chosen.unit1.charAt(0)}, to the number of ${chosen.unit2_plural}, ${chosen.unit2_plural.charAt(0)}?`;
+          prob2 += ` What equation relates the ${chosen.unit1}, \\(${chosen.unit1.charAt(0)}\\), to the number of ${chosen.unit2_plural}, \\(${chosen.unit2_plural.charAt(0)}\\)?`;
           ans = "\\("+chosen.unit1.charAt(0)+" = "+chosen.unitRate+chosen.unit2_plural.charAt(0)+"\\)"; 
 
         } else{
@@ -874,15 +875,15 @@
         var maxPrice = Math.max(price1,price2);
 
         if(price1 == minPrice){
-          var ans = "\\("+num1+"\\) "+plural+" for $\\("+cost1.toFixed(2)+"\\)";
+          var ans = `${num1} ${plural} for $${cost1.toFixed(2)}`;
         }else{
-          var ans = "\\("+num2+"\\) "+plural+" for $\\("+cost2.toFixed(2)+"\\)";
+          var ans = `${num2} ${plural} for $${cost2.toFixed(2)}`;
         }
         var cost1 = formatDec(price1*num1);
         var cost2 = formatDec(price2*num2);     
 
-        var prob = "Determine the better deal: \\("+num1+"\\) "+plural+" for $\\("+cost1.toFixed(2)+"\\) or \\("+num2+"\\) "+plural+" for $\\("+cost2.toFixed(2)+"\\).";
-        ans += "<br>$\\("+minPrice.toFixed(2)+"\\) per "+single+" is cheaper than $\\("+maxPrice.toFixed(2)+"\\) per "+single;
+        var prob = `Determine the better deal: ${num1} ${plural} for $${cost1.toFixed(2)} or ${num2} ${plural} for $${cost2.toFixed(2)}`;
+        ans += `<br>$${minPrice.toFixed(2)} per ${single} is cheaper than $${maxPrice.toFixed(2)} per ${single}`;
        
        return {p:prob, a:ans};
     }
